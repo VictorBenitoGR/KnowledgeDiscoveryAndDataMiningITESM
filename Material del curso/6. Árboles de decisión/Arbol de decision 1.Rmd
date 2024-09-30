@@ -1,0 +1,77 @@
+---
+title: "Árboles"
+author: "Alan Coello"
+date: ""
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+Árbol de decisión
+```{r}
+library(tree)
+# Selección muestra entrenamiento de un 70%
+
+sample <- sample(c(TRUE, FALSE), nrow(iris), replace=TRUE, prob=c(0.7,0.3))
+train  <- iris[sample, ]
+test   <- iris[!sample, ]
+```
+
+```{r}
+head(iris)
+tail(iris)
+unique(iris$Species)
+```
+
+
+Creación del árbol
+```{r}
+iris.tree = tree(iris$Species~.,iris,subset=train)
+summary(iris.tree)
+```
+
+
+```{r}
+plot(iris.tree);text(iris.tree,pretty=0)
+```
+
+Ver los valores del árbol
+```{r}
+iris.tree
+```
+
+Predecir el otro 30% de los datos
+```{r}
+tree.pred=predict(iris.tree,test,type="class")
+summary(tree.pred)
+```
+
+Matriz de confusion
+```{r}
+with(test,table(tree.pred,Species))
+```
+
+
+Usando el modelo C5.0
+```{r}
+library(C50)
+modeloc5 <- C5.0(Species~., data = train,rules=TRUE)
+summary(modeloc5)   #tambien puede ser solo "modelo"
+```
+
+Predicción
+```{r}
+prediccion <- predict(modeloc5,newdata=test)
+tabla <- table(prediccion, test$Species)
+tabla
+```
+
+Porcentaje de error
+```{r}
+100 * sum(diag(tabla)) / sum(tabla)
+```
+
+
