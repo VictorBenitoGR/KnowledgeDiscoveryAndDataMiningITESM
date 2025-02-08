@@ -6,14 +6,6 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-# *** Importación de datos ----------------------------------------------------
-
-# * Importar datos
-resultados = pd.read_excel("data/Centros Comerciales EM19 Tr5.xlsx")
-
-# *Guardar nombre de las columnas en el portapapeles
-pd.DataFrame(resultados.columns).to_clipboard()
-
 # ** Constantes ---------------------------------------------------------------
 
 # Paleta de colores Okabe-Ito
@@ -95,12 +87,22 @@ def remover_outliers(data, column):
     return data
 
 
+# *** Importación de datos ----------------------------------------------------
+
+# * Importar datos
+resultados = pd.read_excel("data/Centros Comerciales EM19 Tr5.xlsx")
+
+# *Guardar nombre de las columnas en el portapapeles
+pd.DataFrame(resultados.columns).to_clipboard()
+
+# *** Ejecución ---------------------------------------------------------------
+
 resultados = definir_clase(resultados)
-resultados = remover_no_deseados(resultados, "l1")
+resultados = remover_no_deseados(resultados, "I1")
 resultados_sin_outliers = remover_outliers(resultados, "Duration__in_seconds_")
 
 # Boxplot de Duration__in_seconds_
-plt.figure(figsize=(4, 6))
+plt.figure(figsize=(6, 8))
 sns.boxplot(
     data=resultados_sin_outliers,
     y="Duration__in_seconds_",
